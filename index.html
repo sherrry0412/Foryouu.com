@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise for My Sweetheart</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2b0000, #5c0a0a, #000000);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ff4040;
+        }
+        .page {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 25px;
+            box-shadow: 0 12px 24px rgba(255, 64, 64, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: zoomIn 0.8s ease-in-out;
+            border: 4px solid #ff4040;
+            animation: pulseBorder 3s infinite;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulseBorder {
+            0% { border-color: #ff4040; box-shadow: 0 0 10px #ff4040; }
+            50% { border-color: #ff6666; box-shadow: 0 0 20px #ff6666; }
+            100% { border-color: #ff4040; box-shadow: 0 0 10px #ff4040; }
+        }
+        h1 {
+            font-size: 3.2em;
+            color: #ff4040;
+            margin: 0.5em 0;
+            text-shadow: 0 0 15px #ff4040, 0 0 30px #ff6666;
+            animation: glow 2s infinite;
+        }
+        @keyframes glow {
+            0% { text-shadow: 0 0 15px #ff4040, 0 0 30px #ff6666; }
+            50% { text-shadow: 0 0 25px #ff4040, 0 0 50px #ff6666; }
+            100% { text-shadow: 0 0 15px #ff4040, 0 0 30px #ff6666; }
+        }
+        p {
+            font-size: 1.5em;
+            color: #ff6666;
+            margin: 1em 0;
+            min-height: 70px;
+            position: relative;
+        }
+        p::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+            position: absolute;
+            right: -10px;
+            opacity: 0.6;
+            color: #ff4040;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        input[type="text"] {
+            padding: 12px;
+            font-size: 1.2em;
+            border: 3px solid #ff4040;
+            border-radius: 15px;
+            width: 85%;
+            max-width: 350px;
+            margin: 1em 0;
+            outline: none;
+            background: #2b0000;
+            color: #ff6666;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #ff6666;
+            box-shadow: 0 0 15px #ff4040;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 1.2em;
+            background: #ff4040;
+            color: #000;
+            border: 2px solid #000;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px #ff4040;
+            margin: 10px;
+            position: relative;
+        }
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ff4040, 0 0 40px #ff6666;
+            background: #ff6666;
+        }
+        .heart {
+            position: absolute;
+            width: 70px;
+            opacity: 0.8;
+            animation: float 4s infinite;
+            filter: hue-rotate(0deg) drop-shadow(0 0 10px #ff4040);
+        }
+        .heart1 { top: 5%; left: 5%; transform: rotate(20deg); }
+        .heart2 { top: 10%; right: 10%; transform: rotate(-15deg); }
+        .heart3 { bottom: 10%; left: 15%; transform: rotate(10deg); }
+        .heart4 { bottom: 5%; right: 5%; transform: rotate(-20deg); }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(20deg); }
+            50% { transform: translateY(-30px) rotate(-20deg); }
+            100% { transform: translateY(0) rotate(20deg); }
+        }
+        .particle {
+            position: absolute;
+            width: 25px;
+            opacity: 0;
+            pointer-events: none;
+            animation: particleFly 1.5s ease-out forwards;
+            filter: hue-rotate(0deg) drop-shadow(0 0 8px #ff4040);
+        }
+        @keyframes particleFly {
+            0% { opacity: 0.8; transform: translate(0, 0); }
+            100% { opacity: 0; transform: translate(var(--dx), var(--dy)); }
+        }
+        .progress-bar {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 12px;
+            background: #2b0000;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #ff4040;
+        }
+        .progress {
+            height: 100%;
+            background: #ff4040;
+            transition: width 0.5s;
+            box-shadow: 0 0 10px #ff4040;
+        }
+        .mute-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff4040;
+            color: #000;
+            padding: 8px 15px;
+            font-size: 0.9em;
+            border: 2px solid #000;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ff4040;
+        }
+        .mute-btn:hover {
+            box-shadow: 0 0 20px #ff4040;
+            background: #ff6666;
+        }
+        .sparkle {
+            position: absolute;
+            width: 20px;
+            opacity: 0.7;
+            animation: sparkle 3s infinite;
+            filter: hue-rotate(0deg) drop-shadow(0 0 8px #ff4040);
+        }
+        .sparkle1 { top: 15%; left: 20%; }
+        .sparkle2 { top: 25%; right: 25%; }
+        .sparkle3 { bottom: 20%; left: 30%; }
+        @keyframes sparkle {
+            0% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+            100% { opacity: 0.7; transform: scale(1); }
+        }
+        .falling-heart {
+            position: absolute;
+            width: 30px;
+            opacity: 0.4;
+            animation: fall 5s linear infinite;
+            pointer-events: none;
+            filter: hue-rotate(0deg) drop-shadow(0 0 5px #ff4040);
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100vh); opacity: 0.4; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        #noBtn {
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+        #noBtn:hover {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+        .confetti {
+            position: absolute;
+            width: 30px;
+            opacity: 0;
+            animation: confettiFall 2.5s ease-out forwards;
+            filter: hue-rotate(0deg) drop-shadow(0 0 8px #ff4040);
+        }
+        @keyframes confettiFall {
+            0% { opacity: 0.8; transform: translateY(0) rotate(0); }
+            100% { opacity: 0; transform: translateY(600px) rotate(720deg); }
+        }
+        .page:nth-child(2) { background: linear-gradient(135deg, #2b0000, #3f0a0a); }
+        .page:nth-child(3) { background: linear-gradient(135deg, #3f0a0a, #2b0000); }
+        .page:nth-child(4) { background: linear-gradient(135deg, #2b0000, #4c0d0d); }
+        .page:nth-child(5) { background: linear-gradient(135deg, #4c0d0d, #2b0000); }
+        .page:nth-child(6) { background: linear-gradient(135deg, #2b0000, #5c0a0a); }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="https://freesound.org/data/previews/517/517614_10836005-lq.mp3" type="audio/mpeg">
+    </audio>
+    <button class="mute-btn" onclick="toggleMusic()">Mute</button>
+
+    <div id="page1" class="page active">
+        <div class="progress-bar"><div class="progress" style="width: 16.67%;"></div></div>
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart1" alt="heart">
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart2" alt="heart">
+        <img src="https://img.icons8.com/fluency/20/000000/sparkle.png" class="sparkle sparkle1" alt="sparkle">
+        <h1>Type Your Lovely Name!</h1>
+        <p id="text1">Hey cutie, let's start this magical journey! 💖</p>
+        <input type="text" id="nameInput" placeholder="Your Name">
+        <button onclick="goToPage(2)">Next</button>
+    </div>
+    <div id="page2" class="page">
+        <div class="progress-bar"><div class="progress" style="width: 33.33%;"></div></div>
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart3" alt="heart">
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart4" alt="heart">
+        <img src="https://img.icons8.com/fluency/20/000000/sparkle.png" class="sparkle sparkle2" alt="sparkle">
+        <h1>Hello, <span id="nameDisplay1"></span>!</h1>
+        <p id="text2"></p>
+        <button onclick="goToPage(3)">Next</button>
+    </div>
+    <div id="page3" class="page">
+        <div class="progress-bar"><div class="progress" style="width: 50%;"></div></div>
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart1" alt="heart">
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart2" alt="heart">
+        <img src="https://img.icons8.com/fluency/20/000000/sparkle.png" class="sparkle sparkle3" alt="sparkle">
+        <h1><span id="nameDisplay2"></span>, You're Amazing!</h1>
+        <p id="text3"></p>
+        <button onclick="goToPage(4)">Next</button>
+    </div>
+    <div id="page4" class="page">
+        <div class="progress-bar"><div class="progress" style="width: 66.67%;"></div></div>
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart3" alt="heart">
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart4" alt="heart">
+        <img src="https://img.icons8.com/fluency/20/000000/sparkle.png" class="sparkle sparkle1" alt="sparkle">
+        <h1><span id="nameDisplay3"></span>, My Heart Beats for You!</h1>
+        <p id="text4"></p>
+        <button onclick="goToPage(5)">Next</button>
+    </div>
+    <div id="page5" class="page">
+        <div class="progress-bar"><div class="progress" style="width: 83.33%;"></div></div>
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart1" alt="heart">
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart2" alt="heart">
+        <img src="https://img.icons8.com/fluency/20/000000/sparkle.png" class="sparkle sparkle2" alt="sparkle">
+        <h1><span id="nameDisplay4"></span>, You're My Everything!</h1>
+        <p id="text5"></p>
+        <button onclick="goToPage(6)">Next</button>
+    </div>
+    <div id="page6" class="page">
+        <div class="progress-bar"><div class="progress" style="width: 100%;"></div></div>
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart3" alt="heart">
+        <img src="https://img.icons8.com/fluency/70/000000/hearts.png" class="heart heart4" alt="heart">
+        <img src="https://img.icons8.com/fluency/20/000000/sparkle.png" class="sparkle sparkle3" alt="sparkle">
+        <h1>Do You Love Me, <span id="nameDisplay5"></span>?</h1>
+        <p id="text6">Please say yes, my heart is waiting! 😘</p>
+        <div>
+            <button onclick="sayYes()">Yes</button>
+            <button id="noBtn" onmouseover="moveNoButton()" onclick="moveNoButton()">No</button>
+        </div>
+    </div>
+
+    <script>
+        let userName = '';
+        const compliments = [
+            "You're the fire in my heart! 🔥",
+            "Your smile lights up my dark world! 😘",
+            "You're my sweetest addiction! 🍷",
+            "You make my heart race! 💓",
+            "Your love is my eternal flame! 🖤",
+            "You're the melody in my chaos! 🎶",
+            "Every moment with you is electric! ⚡️",
+            "You're my forever and always! 💞",
+            "Your laugh is my favorite spark! 😄",
+            "You're my midnight magic! 🌙"
+        ];
+        const music = document.getElementById('bgMusic');
+        let isPlaying = true;
+
+        // Create falling hearts
+        function createFallingHearts() {
+            for (let i = 0; i < 10; i++) {
+                const heart = document.createElement('img');
+                heart.src = 'https://img.icons8.com/fluency/30/000000/hearts.png';
+                heart.className = 'falling-heart';
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.animationDelay = `${Math.random() * 5}s`;
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 5000);
+            }
+        }
+        setInterval(createFallingHearts, 2000);
+
+        // Typing effect
+        function typeText(elementId, text, speed = 40) {
+            const element = document.getElementById(elementId);
+            element.textContent = '';
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Heart particles on click
+        document.addEventListener('click', (e) => {
+            const heartSizes = [20, 25, 30];
+            for (let i = 0; i < 7; i++) {
+                const particle = document.createElement('img');
+                particle.src = 'https://img.icons8.com/fluency/25/000000/hearts.png';
+                particle.className = 'particle';
+                particle.style.left = `${e.clientX}px`;
+                particle.style.top = `${e.clientY}px`;
+                particle.style.width = `${heartSizes[Math.floor(Math.random() * heartSizes.length)]}px`;
+                particle.style.filter = `hue-rotate(0deg) drop-shadow(0 0 8px #ff4040)`;
+                const dx = (Math.random() - 0.5) * 250;
+                const dy = (Math.random() - 0.5) * 250;
+                particle.style.setProperty('--dx', `${dx}px`);
+                particle.style.setProperty('--dy', `${dy}px`);
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1500);
+            }
+        });
+
+        // Toggle music
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                document.querySelector('.mute-btn').textContent = 'Unmute';
+            } else {
+                music.play();
+                document.querySelector('.mute-btn').textContent = 'Mute';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Move "No" button
+        function moveNoButton() {
+            const noBtn = document.getElementById('noBtn');
+            const page = document.getElementById('page6');
+            const maxX = page.offsetWidth - noBtn.offsetWidth - 20;
+            const maxY = page.offsetHeight - noBtn.offsetHeight - 20;
+            const newX = Math.random() * maxX;
+            const newY = Math.random() * maxY;
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = `${newX}px`;
+            noBtn.style.top = `${newY}px`;
+        }
+
+        // "Yes" button action
+        function sayYes() {
+            const text = document.getElementById('text6');
+            typeText('text6', 'Yay! My heart is yours forever, my love! 💖');
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('img');
+                confetti.src = 'https://img.icons8.com/fluency/30/000000/hearts.png';
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * window.innerWidth}px`;
+                confetti.style.top = `-${Math.random() * 100}px`;
+                confetti.style.filter = `hue-rotate(0deg) drop-shadow(0 0 8px #ff4040)`;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 2500);
+            }
+        }
+
+        // Page navigation
+        function goToPage(pageNum) {
+            if (pageNum === 2 && !document.getElementById('nameInput').value.trim()) {
+                alert('Please enter your name!');
+                return;
+            }
+
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(`page${pageNum}`).classList.add('active');
+
+            if (pageNum === 1) {
+                document.getElementById('nameInput').value = '';
+                userName = '';
+                typeText('text1', "Hey cutie, let's start this magical journey! 💖");
+            } else {
+                if (pageNum === 2) {
+                    userName = document.getElementById('nameInput').value.trim();
+                }
+                document.getElementById(`nameDisplay${pageNum - 1}`).textContent = userName;
+                const randomCompliment = compliments[Math.floor(Math.random() * compliments.length)];
+                typeText(`text${pageNum}`, randomCompliment);
+            }
+
+            if (pageNum === 2) {
+                music.play().catch(() => console.log("Auto-play prevented"));
+            }
+        }
+
+        // Start typing effect and falling hearts
+        typeText('text1', "Hey cutie, let's start this magical journey! 💖");
+        createFallingHearts();
+    </script>
+</body>
+</html>
